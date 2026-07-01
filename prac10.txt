@@ -1,0 +1,322 @@
+c->mingw->bin
+- select path
+- eviromental variable : in seaarch bar
+- slect path and edit
+-> styem prperties
+->envirormental variable
+-> new
+-> there copy the : c->mingw->bin
+
+Hello Chandrakanth
+
+	I have shared the updated resume and the requested details for your reference
+
+	CTC - 3.5LPA
+	ECTC - 6.5LPA
+	Notice period - Immediate Joiner
+
+Thanks & Regards,
+Janet Kurian
+
+
+
+#include <stdio,h>
+float pi=3.14;
+int circle()
+{
+int r=5;
+double area;
+area=pi*r*r;
+
+return area;
+
+}
+int calc()
+{
+
+}
+void main(){
+printf("%d",circle());
+}> for addition we can usdse the i,j-> itsek.
+no need for k
+c[i][j]=a[i][j]+b[i][j]
+=
+
+
+
+
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <pthread.h>
+#include <semaphore.h>
+#include <unistd.h>
+pthread_mutex_t mutex;
+sem_t binary_semaphore;
+sem_t counting_semaphore;
+#define num_threads 5
+#define max_resources 3
+int shared_resources=0;
+using namespace std;
+void* thread_function1(void *arg){
+    int thread_id=*((int *)arg);
+      cout<<"enter 1"<<endl;
+    pthread_mutex_lock(&mutex);
+  
+    sleep(1);
+      cout<<"exit 1"<<endl;
+    pthread_mutex_unlock(&mutex);
+    
+    return NULL;
+    
+}
+void* thread_function2(void *arg){
+    int thread_id=*((int *)arg);
+   // pthread_mutex_lock(&mutex);
+       cout<<"enter 2"<<endl;
+   sem_wait(&binary_semaphore);
+    cout<<"enter 2-> waiting"<<endl;
+   shared_resources++;
+    sleep(1);
+     cout<<"exit 2"<<endl;
+    sem_post(&binary_semaphore);
+     
+   // pthread_mutex_unlock(&mutex);
+    return NULL;
+    
+}
+void* thread_function3(void *arg){
+    int thread_id=*((int *)arg);
+   // pthread_mutex_lock(&mutex);
+    cout<<"enter 3"<<endl;
+   sem_wait(&counting_semaphore);
+    cout<<"enter 3-> waiting"<<endl;
+    sleep(1);
+     cout<<"exit 3"<<endl;
+    sem_post(&counting_semaphore);
+   // pthread_mutex_unlock(&mutex);
+    return NULL;
+    
+}
+
+int main()
+{
+   // std::cout<<"Hello World";
+   pthread_t thread[num_threads];
+   int thread_id[num_threads];
+   pthread_mutex_init(&mutex,NULL);
+   sem_init(&binary_semaphore,0,1);
+   sem_init(&counting_semaphore,0,max_resources);
+   for(int i=0;i<=num_threads;i++){
+       thread[i]=i;
+   }
+   pthread_create(&thread[0],NULL,thread_function1,&thread_id[0]);
+   pthread_create(&thread[1],NULL,thread_function1,&thread_id[1]);
+   pthread_join(thread[0],NULL);
+   pthread_join(thread[1],NULL);
+   
+   pthread_create(&thread[2],NULL,thread_function2,&thread_id[2]);
+   pthread_create(&thread[3],NULL,thread_function2,&thread_id[3]);
+   pthread_join(thread[2],NULL);
+   pthread_join(thread[3],NULL);
+   
+   pthread_create(&thread[4],NULL,thread_function3,&thread_id[4]);
+   pthread_create(&thread[5],NULL,thread_function3,&thread_id[5]);
+   pthread_join(thread[4],NULL);
+   pthread_join(thread[5],NULL);
+   
+   pthread_mutex_destroy(&mutex);
+   sem_destroy(&binary_semaphore);
+   sem_destroy(&counting_semaphore);
+
+    return 0;
+}
+}
+
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+class A{
+
+  public:
+      int* data;
+//   A(){}; 
+A(int x){data=new int(x);}
+  A (const A& source){
+      data=new int (*source.data);
+  }
+  
+      A& operator=(const A& source) {
+          data=source.data;
+        // if (this == &source) {
+        //     return *this;  // Handle self-assignment
+        // }
+
+        // Deallocate existing memory
+        // delete data;
+
+        // // Allocate new memory and copy the value
+        // data = new int(*source.data);
+
+        // return *this;
+    }
+  ~A(){std::cout<<"destructor";
+      delete data;
+  };
+  
+  
+  void print(){
+      std::cout<<*data;
+  }
+  
+};
+int main()
+{
+    //std::cout<<"Hello World";
+    A a(5);
+    A a1=a;
+    a1.print();
+   // A a2(7);
+   // a2=a;
+   // a2.print();
+   *a1.data=10;
+ a1.print();
+    return 0;
+}
+
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <map>
+#include <unordered_map>
+#include <vector>
+int main()
+{
+	//std::cout<<"Hello World";
+	std::map<int,int> m;
+	m[0]=12;
+	m[1]=523;
+	m[2]=25;
+	m[3]=324;
+
+	std::unordered_map<int,int> m1;
+	m1[0]=12;
+	m1[2]=25;
+	m1[1]=523;
+	m1[3]=324;
+	m1[4]=34;
+
+
+std::vector<int>v;
+for(int i=0;i<5;i++){
+    v.push_back(i);
+}
+
+	for(const auto pair:m) {
+		std::cout<<pair.first<<"\t"<<pair.second<<std::endl;
+	}
+
+	for(const auto pair:m1) {
+		std::cout<<pair.first<<"\t"<<pair.second<<std::endl;
+	}
+
+
+	for(int n:v) {
+		std::cout<<n<<std::endl;
+	}
+	return 0;
+}
+
+
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <memory>
+class Rectanlge{
+    int length;
+    int breadth;
+    int height;
+    public:
+    Rectanlge(int l,int b,int h){
+        length=l;
+        breadth=b;
+        height=h;
+        
+        //int area=length*breadth;
+    }
+    Rectanlge(int a,int b):length(a),breadth(b){}
+    int Area(){
+        int area=length*breadth;
+        return area;
+    }
+    int Volume(){
+        int volume=length*breadth*height;
+        return volume;
+    }
+};
+
+int main()
+{
+    // std::cout<<"Hello World";
+    //Rectanlge r1;
+    std::unique_ptr<Rectanlge> r0=std::make_unique<Rectanlge>(6,7,8);
+    std::cout<<r0->Volume();
+    std::unique_ptr<Rectanlge> r1=std::move(r0);
+    std::cout<<r1->Volume();
+    
+    
+    
+    std::shared_ptr<Rectanlge> r2=std::make_shared<Rectanlge>(10,5);
+    std::cout<<r2->Area();
+//  std::shared_ptr<Rectanlge> r3=r2;
+//   std::cout<<r3->Area();
+  std::weak_ptr<Rectanlge> w1=r2;
+  if(auto shared_from_weak=w1.lock()){
+      std::cout<<shared_from_weak->Area();
+  }else{
+      std::cout<<"object destroyed ";
+  }
+  
+  r2.reset();
+  
+    if(auto shared_from_weak=w1.lock()){
+      std::cout<<shared_from_weak->Area();
+  }else{
+      std::cout<<"object destroyed ";
+  }
+    return 0;
+}
+
+
+
+echo "# Rest-API" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/JanetKurian1996/Rest-API.git
+git push -u origin main
