@@ -1,0 +1,462 @@
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <pthread.h>
+
+#include <semaphore.h>
+
+#include <unistd.h>
+
+ 
+
+// Shared counter
+
+int counter = 0;
+
+ 
+
+// Mutex for protecting counter
+
+pthread_mutex_t counter_mutex;
+
+ 
+
+// Semaphore to limit concurrent access
+
+sem_t resource_sem;
+
+ 
+
+// Number of threads
+
+#define THREAD_COUNT 5
+
+ 
+
+// Thread function
+
+void* thread_task(void* arg) {
+
+    int thread_id = *(int*)arg;
+
+    free(arg); // Free allocated memory for thread ID
+
+ 
+
+    // Wait on semaphore (limit concurrent access)
+
+    sem_wait(&resource_sem);
+
+ 
+
+    printf("Thread %d: Waiting for mutex to update counter...\n", thread_id);
+
+ 
+
+    // Lock mutex before modifying shared counter
+
+    pthread_mutex_lock(&counter_mutex);
+
+ 
+
+    // Critical section
+
+    int local_copy = counter;
+
+    printf("Thread %d: Current counter = %d\n", thread_id, local_copy);
+
+    local_copy++;
+
+    sleep(1); // Simulate work
+
+    counter = local_copy;
+
+    printf("Thread %d: Updated counter = %d\n", thread_id, counter);
+
+ 
+
+    // Unlock mutex
+
+    pthread_mutex_unlock(&counter_mutex);
+
+ 
+
+    // Release semaphore
+
+    sem_post(&resource_sem);
+
+ 
+
+    pthread_exit(NULL);
+
+}
+
+ 
+
+int main() {
+
+    pthread_t threads[THREAD_COUNT];
+
+ 
+
+    // Initialize mutex
+
+    if (pthread_mutex_init(&counter_mutex, NULL) != 0) {
+
+        perror("Mutex init failed");
+
+        return EXIT_FAILURE;
+
+    }
+
+ 
+
+    // Initialize semaphore with max 2 threads allowed in resource
+
+    if (sem_init(&resource_sem, 0, 2) != 0) {
+
+        perror("Semaphore init failed");
+
+        return EXIT_FAILURE;
+
+    }
+
+ 
+
+    // Create threads
+
+    for (int i = 0; i < THREAD_COUNT; i++) {
+
+        int* thread_id = (int *) malloc(sizeof(int));
+
+        if (!thread_id) {
+
+            perror("Memory allocation failed");
+
+            return EXIT_FAILURE;
+
+        }
+
+        *thread_id = i + 1;
+
+        if (pthread_create(&threads[i], NULL, thread_task, thread_id) != 0) {
+
+            perror("Thread creation failed");
+
+            return EXIT_FAILURE;
+
+        }
+
+    }
+
+ 
+
+    // Wait for all threads to finish
+
+    for (int i = 0; i < THREAD_COUNT; i++) {
+
+        pthread_join(threads[i], NULL);
+
+    }
+
+ 
+
+    // Destroy mutex and semaphore
+
+    pthread_mutex_destroy(&counter_mutex);
+
+    sem_destroy(&resource_sem);
+
+ 
+
+    printf("Final counter value: %d\n", counter);
+
+    return EXIT_SUCCESS;
+
+}
+
+ 
+
+////
+
+#include <iostream>
+
+#include <unistd.h>   // For pipe(), fork(), read(), write()
+
+#include <cstring>    // For strlen()
+
+#include <sys/wait.h> // For wait()
+
+ 
+
+int main() {
+
+    int fd[2]; // fd[0] - read end, fd[1] - write end
+
+    pid_t pid;
+
+    const char* message = "Hello from parent via pipe!";
+
+    char buffer[100];
+
+ 
+
+    // Create the pipe
+
+    if (pipe(fd) == -1) {
+
+        perror("pipe");
+
+        return 1;
+
+    }
+
+ 
+
+    // Create a child process
+
+    pid = fork();
+
+    if (pid < 0) {
+
+        perror("fork");
+
+        return 1;
+
+    }
+
+ 
+
+    if (pid > 0) {
+
+        // Parent process
+
+        close(fd[0]); // Close unused read end
+
+ 
+
+        // Write message to pipe
+
+        ssize_t bytesWritten = write(fd[1], message, strlen(message) + 1);
+
+        if (bytesWritten == -1) {
+
+            perror("write");
+
+            return 1;
+
+        }
+
+ 
+
+        close(fd[1]); // Close write end after writing
+
+        wait(nullptr); // Wait for child to finish
+
+    }
+
+    else {
+
+        // Child process
+
+        close(fd[1]); // Close unused write end
+
+ 
+
+        // Read message from pipe
+
+        ssize_t bytesRead = read(fd[0], buffer, sizeof(buffer));
+
+        if (bytesRead == -1) {
+
+            perror("read");
+
+            return 1;
+
+        }
+
+ 
+
+        std::cout << "Child received: " << buffer << std::endl;
+
+        close(fd[0]); // Close read end
+
+    }
+
+ 
+
+    return 0;
+
+}
+
+
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+
+class Shape
+{
+
+public:
+
+    virtual string getName()=0;
+
+    virtual ~Shape(){}
+
+};
+
+
+class Triangle: public Shape
+{
+
+public:
+
+    string getName()
+    {
+        return "Triangle";
+    }
+
+};
+
+
+class Square: public Shape
+{
+
+public:
+
+    string getName()
+    {
+        return "Square";
+    }
+
+};
+
+
+class Circle: public Shape
+{
+
+public:
+
+    string getName()
+    {
+        return "Circle";
+    }
+
+};
+
+
+enum Type
+{
+    TRIANGLE,
+    SQUARE,
+    CIRCLE
+};
+
+
+class Factory
+{
+
+public:
+
+Shape* create(Type t)
+{
+
+    switch(t)
+    {
+
+    case TRIANGLE:
+        return new Triangle();
+
+    case SQUARE:
+        return new Square();
+
+    case CIRCLE:
+        return new Circle();
+
+    }
+
+    return nullptr;
+}
+
+};
+
+
+
+int main()
+{
+
+    vector<Shape*> shapes;
+
+
+    Factory f;
+
+
+    shapes.push_back(f.create(TRIANGLE));
+    shapes.push_back(f.create(SQUARE));
+    shapes.push_back(f.create(CIRCLE));
+
+
+    for(Shape* s: shapes)
+    {
+        cout << s->getName() << endl;
+    }
+
+
+    for(Shape* s: shapes)
+    {
+        delete s;
+    }
+
+
+    return 0;
+}
+
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+
+class Singleton {
+private:
+    static Singleton* instance;
+
+    // Private constructor
+    Singleton() {
+        std::cout << "Singleton instance created.\n";
+    }
+
+    // Delete copy constructor and assignment
+    Singleton(const Singleton&) = delete;
+    Singleton& operator=(const Singleton&) = delete;
+
+public:
+    static Singleton* getInstance() {
+        if (instance == nullptr)
+            instance = new Singleton();
+        return instance;
+    }
+
+    void showMessage() {
+        std::cout << "Hello from Singleton!" << std::endl;
+    }
+};
+
+Singleton* Singleton::instance = nullptr;
+
+int main() {
+    Singleton* s1 = Singleton::getInstance();
+    s1->showMessage();
+
+    Singleton* s2 = Singleton::getInstance();
+    std::cout << (s1 == s2); // Will print 1 (true)
+    return 0;
+}
