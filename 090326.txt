@@ -1,0 +1,80 @@
+
+// struct Circle {
+//     radius: f64,
+// }
+
+// struct Rectangle {
+//     length: f64,
+//     breadth: f64,
+// }
+
+// trait Shape {
+//     fn area(&self) -> f64;
+// }
+
+// impl Shape for Circle {
+//     fn area(&self) -> f64 {
+//         3.14 * self.radius * self.radius
+//     }
+// }
+
+// impl Shape for Rectangle {
+//     fn area(&self) -> f64 {
+//         self.length * self.breadth
+//     }
+// }
+
+// fn main() {
+//     let circle_1 = Circle {
+//         radius: 2.0,
+//     };
+
+//     let r1 = Rectangle {
+//         length: 2.0,
+//         breadth: 4.0,
+//     };
+
+// //     println!("Area of circle: {}", circle_1.area());
+// //     println!("Area of rectangle: {}", r1.area());
+// // }
+
+// fn larger<'a>(a: &'a i32, b: &'a i32) -> &'a i32 {
+//     if a > b {
+//         a
+//     } else {
+//         b
+//     }
+// }
+
+// fn main() {
+
+//     let result;
+//     let x = 10;{
+//          let y = 20;
+
+//     result = larger(&x, &y);
+//     }
+   
+
+//     println!("Larger number: {}", result);
+// }
+
+fn main(){
+    // let a=32;
+    // let b=a;
+     let mut a=32;
+    let mut b=a;
+      println!("{}",a);
+     println!("{}",b);
+     //  cannot assign twice to immutable variable
+     // a=10;
+    // let d=a;
+    a=10;
+    //cannot assign twice to immutable variable
+    // b=a;
+    b=a;
+    println!("{}",a);
+    println!("{}",b);
+    //  println!("{}",c);
+    //  println!("{}",d);
+}
