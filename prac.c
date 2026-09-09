@@ -82,3 +82,37 @@ int main()
 }
 
 /////
+
+#include <stdio.h>
+
+int reverse_digits(int a){
+    int rem=0;
+    int x;
+  
+    while(a>0){
+        x=a%10;
+        rem=rem*10+x;  
+        a/=10;
+    }
+    printf("rev =%d\n",rem);
+    return rem;
+}
+int main(void)
+{
+    int a = 15;
+    int b = 20;
+    
+    reverse_digits(a); // a=51 here after reversing it.
+    //   a=reverse_digits(a); // in this case a=51 after swapping
+    int temp;
+
+    temp = a;
+    a = b;
+    b = temp;
+    // here value  of b=15 not 51 after swapping. value of a=15 only before swap.
+    
+    printf("a = %d\n", a);
+    printf("b = %d\n", b);
+
+    return 0;
+}
